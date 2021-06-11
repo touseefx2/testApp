@@ -213,6 +213,10 @@ Alert.alert(
     
         )
       }
+
+      rf(){
+        this.forceUpdate()
+      }
  
       RenderContacts  =   ({ item, index })  => {
         
@@ -228,7 +232,7 @@ Alert.alert(
     
         return (
 
-          <View>
+          <View style={{marginTop:20}}>
 
 <TouchableOpacity 
 style={{position:"absolute",right:0,marginRight:5}}
@@ -237,7 +241,7 @@ onPress={()=>{this.removeContact(index)}}>
 </TouchableOpacity>
 
             <TouchableOpacity
-            onPress={()=>{this.props.navigation.navigate("Edit Details",{index:index})}}
+            onPress={()=>{this.props.navigation.navigate("Edit Details",{index:index,rf:()=>this.rf()})}}
             style={{width:150, backgroundColor:"white",height:125,marginLeft:10,borderRadius:7,marginTop:30,marginRight:10,elevation:10,padding:5 }}>
 
 
@@ -316,7 +320,6 @@ return(
   }
 
   export default inject("store")(observer(Home_Screen));
- // export default Home_Screen
  
   const styles = StyleSheet.create({  
   

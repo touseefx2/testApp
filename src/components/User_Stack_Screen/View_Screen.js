@@ -73,6 +73,10 @@ city:contact[index].city
   })
 }
 
+
+componentWillUnmount(){
+  this.props.route.params.rf()
+}
    
  
       RenderContacts  =   (index )  => {
