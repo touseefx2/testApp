@@ -21,13 +21,6 @@ componentDidMount() {
   setTimeout(() => {
     this.setState({loading:false})
   }, 1700);
-
-
-}
- 
-
-
-// tossfs
 render()
 {
   const {loading} = this.state;
