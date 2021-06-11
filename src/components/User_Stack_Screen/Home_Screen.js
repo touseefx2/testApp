@@ -1,39 +1,16 @@
 import React, { Component } from "react";
-import { View,TouchableOpacity,Text,Dimensions,TextInput ,Modal,StyleSheet,FlatList,ToastAndroid} from "react-native";
-import { ScrollView } from 'react-native-gesture-handler';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { View,TouchableOpacity,Text,Dimensions,TextInput ,Modal,StyleSheet,FlatList,ToastAndroid,Alert} from "react-native";
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { Container,Content} from 'native-base'
 import {Loader} from "../loader"
 import { strLength } from "./strLength";
-import  contactStore from "../../mobx/contactStore";
 import { inject, observer } from "mobx-react"; 
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-// const contactsData=[
-//   {
-//     id: 1,
-//     name:"touseef",
-//     phone:"03075839836",
-//     city:"islamabad,Pakistan"
-//   },
-//   {
-//     id: 2,
-//     name:"Muhammad Umer Abdul",
-//     phone:"03075839836",
-//     city:"Gujrat"
-//   },
-//   {
-//     id: 3,
-//     name:"x2",
-//     phone:"03075839836",
-//     city:"islamabad"
-//   },
-  
-// ]
+ 
  
  class  Home_Screen extends Component  {
   
@@ -48,7 +25,7 @@ const windowHeight = Dimensions.get('window').height;
             phone:"",
             city:"",
             name:"",
-           flastlistR:false
+            flastlistR:false
             }
            
      
@@ -105,11 +82,31 @@ city,
   ToastAndroid.BOTTOM)
 
 }
+
+removeContact(index){
+const {removeContacts}=this.props.store;
+
+Alert.alert(
+  "",
+  "Are you sure ?  you want to delete contact ?",
+  [
+    {
+      text: "No",
+      onPress: () => console.log("Cancel Pressed"),
+      style: "cancel"
+    },
+    { text: "Yes", onPress: () => {removeContacts(index)}
+    }
+  ]
+);
+
+
+}
                
 
       render_Add_Contact()
       {
-        const {loader,dialogVisible } = this.state;
+        const { dialogVisible } = this.state;
      
 
         const check =  this.checkEmptyFields();
@@ -127,7 +124,12 @@ city,
 
 
 
-<View style={styles.modal}>
+<View style={styles.modalContainer}>
+
+  <View style={styles.modal}>
+
+
+  
 
 
 <View style={{backgroundColor:"#307ecc",width:"100%",height:50,borderRadius:5,alignItems:"center",justifyContent:"center"}}>
@@ -180,6 +182,7 @@ city,
 
 </View>
 
+</View>
 
   </View>
  
@@ -221,13 +224,24 @@ city,
        phone =   strLength(phone,"phone")
        city  =   strLength(city,"city")
 
-        const obj={name,phone,city,index}
+        
     
         return (
-         
-          <View 
-            onPress={()=>{this.props.navigate("View_Screen",{obj:obj})}}
+
+          <View>
+
+<TouchableOpacity 
+style={{position:"absolute",right:0,marginRight:5}}
+onPress={()=>{this.removeContact(index)}}>
+<AntDesign size={27} color="red" name="deleteuser" />
+</TouchableOpacity>
+
+            <TouchableOpacity
+            onPress={()=>{this.props.navigation.navigate("Edit Details",{index:index})}}
             style={{width:150, backgroundColor:"white",height:125,marginLeft:10,borderRadius:7,marginTop:30,marginRight:10,elevation:10,padding:5 }}>
+
+
+
 
            <View style={{flexDirection:"row",alignItems:"center"}}>
 
@@ -247,9 +261,14 @@ city,
            </View>
  
            
-            </View>
+            </TouchableOpacity>
           
-          
+        
+      
+
+          </View>
+         
+        
           
           
         )
@@ -260,17 +279,17 @@ render(){
  const {dialogClick,flastlistR,loader}= this.state;
  const { contact } = this.props.store;
  
- console.log("contact mobdstre", contact)
 
 return(
       <Container style={{backgroundColor:"#f2f2f2"}}>   
       {this.renderTopBar()}
       <Content style={{backgroundColor:"#f2f2f2"}}>
           
-<Loader loader={loader}/>
+       <Loader loader={loader}/>
+
               {dialogClick && this.render_Add_Contact()} 
 
-              {contact.length<=0  
+              {contact.length<=0    
               ?(
               <Text style={{fontSize:38,color:"silver",marginTop:"60%",alignSelf:"center"}} >Empty</Text>
               )
@@ -300,15 +319,18 @@ return(
  // export default Home_Screen
  
   const styles = StyleSheet.create({  
+  
+    modalContainer: {    
+      backgroundColor : 'rgba(0,0,0,0.7)', 
+      justifyContent: 'center', 
+      alignItems: 'center',
+      flex:1,        
+       },
     modal: {    
     backgroundColor : "#e3e3e3",   
     height: 350 ,  
     width: '70%',  
-    borderRadius:10,  
-    borderWidth: 1,  
-    borderColor: "#307ecc",    
-    marginTop: "50%",  
-    alignSelf:"center"   
+    borderRadius:10,       
      },  
   
   });  

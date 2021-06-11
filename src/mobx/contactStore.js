@@ -1,7 +1,12 @@
-import { decorate, observable, action } from "mobx";
+import { observable,makeObservable  } from "mobx";
 
 class contactStore {
 
+  constructor(){
+    makeObservable(this) //if use latest version of mobx it is must add to rerdr cmpnt aftr state chnge
+  }
+
+ 
  @observable contact = []
 
  
@@ -11,33 +16,28 @@ class contactStore {
     }
   }
 
+  editContact =(index,name,phone,city)=>{
+    if(index!=null){
+      this.contact[index].name=name;
+      this.contact[index].phone=phone;
+      this.contact[index].city=city;
+    }
+  }
  
-  removeContacts (cntct) {
-    this.contact = this.list.filter((l) => {
-      return l.index !== cntct.index
-    })
+  removeContacts = (index)=> {
+    this.contact.splice(index,1)
   }
 
-
-//   addItem(item, name) {
-//     this.list.forEach((l) => {
-//       if (l.index === item.index) {
-//         l.items.push(name)
-//       }
-//     })
-//   }
-
 }
+ 
+ 
+ export default new contactStore();
 
-//another way to decorate variables with observable
+ 
+
+ //another way to decorate variables with observable
 // decorate(contactStore, {
 //   contact: observable,
 //   removeContacts: action,
 //   addContact: action
 // });
-
-
-
- export default new contactStore();
-
- 

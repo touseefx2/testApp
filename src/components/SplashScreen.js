@@ -19,8 +19,8 @@ const containerBackgroundColor=  "white"
       <View style={{flex:1,backgroundColor:containerBackgroundColor}}>
  
  
-  <Text style={{fontSize:37,color:"#307ecc" ,fontWeight:"bold",fontStyle:"italic",marginTop:"10%",alignSelf:"center",position:"absolute"}} >
-       {title} 
+  <Text style={{fontSize:37,color:"#307ecc" ,fontWeight:"bold",marginTop:"20%",alignSelf:"center",position:"absolute"}} >
+         {title} 
     </Text>      
    
 
