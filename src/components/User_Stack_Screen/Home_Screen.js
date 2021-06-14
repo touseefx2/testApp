@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { View,TouchableOpacity,Text,Dimensions,TextInput ,Modal,StyleSheet,FlatList,ToastAndroid,Alert,ImageBackground} from "react-native";
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import React, { useEffect, useState,useRef} from 'react';
+import { View,TouchableOpacity,Text,Dimensions,Modal,StyleSheet,Animated,FlatList,ToastAndroid,Alert,ImageBackground,StatusBar} from "react-native";
 import Entypo from 'react-native-vector-icons/Entypo'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { Container,Content, Form, Item, Input, Label } from 'native-base'
 import {Loader} from "../loader"
 import { strLength } from "./strLength";
@@ -11,42 +11,48 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
- 
- 
- class  Home_Screen extends Component  {
-  
-      constructor(props) {
-            super(props);
-            this.state =
-            {
-            loader:false,
-            dialogVisible:false,
-            dialogClick:false,
+const Spacing=20
+const ITEM_SIZE= 100
 
-            phone:"",
-            city:"",
-            name:"",
-            flastlistR:false
-            }
-           
-     
-          }
+  //create your forceUpdate hook
+  function useForceUpdate(){
+    const [value, setValue] = useState(0); // integer state
+    return () => setValue(value => value + 1); // update the state to force render
+  }
+
+
+function  Home_Screen(props)  {
+  
+  const [name, setname] = useState("")
+  const [phone, setphone] = useState("")
+  const [city, setcity] = useState("")
+  const [flastlistR, setFlatListR] = useState(false)
+  const [loader, setloader] = useState(true)
+  const [dialogVisible, setdialogVisible] = useState(false)
+  const [dialogClick, setdialogClick] = useState(false)
+  const scrollY =  useRef(new Animated.Value(0)).current;
+  const forceUpdate = useForceUpdate();
+  const { contact } = props.store;
+
  
- 
-clearfields(){
-    this.setState(
-      {
-        dialogVisible:false,
-        phone:"",
-        city:"",
-        name:""
-      }
-    ) 
+
+  useEffect(()=>{
+getData();
+setTimeout(() => {
+  setloader(false)
+}, 800);
+  },[])
+
+  const clearfields =()=>{
+    setdialogClick(false);
+    setname("");
+    setphone("");
+    setcity("") 
 }
 
-checkEmptyFields () 
+const checkEmptyFields=()=>
 {
-  const {name,phone,city}= this.state;
+  
 
     if(name=="" || phone=="" || city==""    ){
       return false;
@@ -55,7 +61,7 @@ checkEmptyFields ()
     }
 }
  
-  storeData = async (value) => {
+const storeData = async (value) => {
   try {
     const jsonValue = JSON.stringify(value)
     await AsyncStorage.setItem('contact', jsonValue)
@@ -64,9 +70,9 @@ checkEmptyFields ()
   }
 }
 
-getData = async () => {
+const getData = async () => {
   try {
-    const {setContact } = this.props.store;
+    const {setContact } =  props.store;
     const jsonValue = await AsyncStorage.getItem('contact')
     return jsonValue != null ? setContact(JSON.parse(jsonValue)) : null;
  
@@ -75,38 +81,31 @@ getData = async () => {
   }
 }
 
-componentDidMount(){
-  this.getData()
-}
  
-  onClickAdd(){
- this.setState({loader:true});
-  
- const {name,phone,city,flastlistR}= this.state;
- const {addContact,contact} = this.props.store;
  
+const onClickAdd=()=>{
+ setloader(true)
+ const {addContact,contact} =  props.store;
 const obj={
 name,
 phone,
 city,
  }
- 
  addContact(obj)
- 
- this.clearfields();
- this.setState({flastlistR:!flastlistR})
+ clearfields();
+ setFlatListR(!flastlistR)
  setTimeout(() => {
-  this.setState({loader:false})
+  setloader(false)
  }, 800);
- this.storeData(contact)
+  storeData(contact)
  ToastAndroid.showWithGravity(
   "Add",
   ToastAndroid.SHORT,
   ToastAndroid.BOTTOM)
   }
 
-removeContact(index){
-const {removeContacts,contact}=this.props.store;
+  const removeContact=(index)=>{
+const {removeContacts,contact}=props.store;
 
 Alert.alert(
   "",
@@ -117,7 +116,7 @@ Alert.alert(
       onPress: () => console.log("Cancel Pressed"),
       style: "cancel"
     },
-    { text: "Yes", onPress: () => {removeContacts(index),this.storeData(contact)}
+    { text: "Yes", onPress: () => {removeContacts(index),storeData(contact)}
     }
   ]
 );
@@ -126,17 +125,14 @@ Alert.alert(
 }
                
 
-      render_Add_Contact()
+const    render_Add_Contact=()=>
       {
-        const { dialogVisible } = this.state;
-     
-
-        const check =  this.checkEmptyFields();
+ 
+        const check =   checkEmptyFields();
         let ButtonEnable=false
         if(check) 
         ButtonEnable=true 
-
-        console.log(check);
+ 
         
         return(
         <Modal
@@ -156,7 +152,7 @@ Alert.alert(
   
 
 
-<View style={{backgroundColor:"#307ecc",width:"100%",height:50,borderRadius:5,alignItems:"center",justifyContent:"center"}}>
+<View style={{backgroundColor:"black",width:"100%",height:50,alignItems:"center",justifyContent:"center"}}>
 <Text style={{fontSize:24,color:"white",fontWeight:"bold"}}>New Contact</Text>
 </View>
 
@@ -167,21 +163,21 @@ Alert.alert(
         style={{ width:230,height:45,fontSize:16,borderColor:"black",borderWidth:0.4}}
         >
               <Label>Name</Label>
-              <Input onChangeText={text=> this.setState({name :text })} />
+              <Input onChangeText={text=>setname(text)} />
             </Item>
 
             <Item floatingLabel
         style={{ width:230,height:45,fontSize:16,borderColor:"black",borderWidth:0.4,marginTop:10}}
         >
               <Label>Phone</Label>
-              <Input keyboardType="number-pad" onChangeText={text=> this.setState({phone:text })} />
+              <Input keyboardType="number-pad" onChangeText={text=> setphone(text)} />
             </Item>
 
             <Item floatingLabel
         style={{ width:230,height:45,fontSize:16,borderColor:"black",borderWidth:0.4,marginTop:10}}
         >
               <Label>City</Label>
-              <Input onChangeText={text=> this.setState({city:text })} />
+              <Input onChangeText={text=> setcity(text)} />
             </Item>
             
 
@@ -191,13 +187,13 @@ Alert.alert(
 
 <View style={{flexDirection:"row",position:"absolute",bottom:0,width:"100%",marginBottom:5,padding:10,margin:10}}>
 
-<TouchableOpacity  style={{backgroundColor:!ButtonEnable ? "#307ecc" : "white",width:100,height:40,borderRadius:10,alignItems:"center",justifyContent:"center"}}  onPress={()=>{this.clearfields()}}>
+<TouchableOpacity  style={{backgroundColor:!ButtonEnable ? "#307ecc" : "white",width:100,height:40,borderRadius:10,alignItems:"center",justifyContent:"center"}}  onPress={()=>{clearfields()}}>
 <Text style={{color:!ButtonEnable ? "white" : "black",fontSize:22}} >Cancel</Text>
 </TouchableOpacity>
 
 
 {ButtonEnable ? (
-  <TouchableOpacity   style={{backgroundColor:!ButtonEnable ?"white":"#307ecc",width:100,height:40,borderRadius:10,alignItems:"center",justifyContent:"center",marginLeft:10}} onPress={() => {this.onClickAdd()}} >
+  <TouchableOpacity   style={{backgroundColor:!ButtonEnable ?"white":"#307ecc",width:100,height:40,borderRadius:10,alignItems:"center",justifyContent:"center",marginLeft:10}} onPress={() => {onClickAdd()}} >
 <Text style={{color:!ButtonEnable ? "silver":"white",fontSize:22}} >Add</Text>
 </TouchableOpacity>
 
@@ -222,32 +218,23 @@ Alert.alert(
       }
 
     
-      renderTopBar(){
-
+      const    renderAddButton=()=>{
         return(
-       
-      <TouchableOpacity onPress={()=>{this.setState({dialogVisible:true,dialogClick:true})}}
-      style={{backgroundColor:"#307ecc",borderRadius:10,height:50, marginTop:10,width:"90%",alignSelf:"center",alignItems:"center",justifyContent:"center"}}
-      >
-
-   <View   style={{backgroundColor:"#307ecc" ,alignItems:"center",flexDirection:"row",height:40,justifyContent:"center",width:"90%",alignSelf:"center",borderColor:"white",borderWidth:1.5}}>  
-<Text style={{color:"white",fontSize:18,fontWeight:"bold"}}>Add New Contact</Text>
-<Entypo style={{marginLeft:10}}  size={25} color="white" name="add-user" />
-    </View>
-
+    <TouchableOpacity onPress={()=>{setdialogClick(true);setdialogVisible(true)}} 
+    style={{ position: 'absolute',flex:1,right: 20,bottom: 20,backgroundColor:"#292929",width:80,
+    height:80,borderRadius:40,alignItems:"center",justifyContent:"center"}}>
+     <MaterialIcons onPress={()=>{setdialogClick(true);setdialogVisible(true)}}   size={70} color="white" name="add" />
     </TouchableOpacity>
-
-                  
-    
+   
         )
       }
 
-      rf(){
-        this.forceUpdate()
+      const    rf=()=>{
+        forceUpdate()
       }
  
-      RenderContacts  =   ({ item, index })  => {
-        
+      const    RenderContacts  =   ({ item, index })  => { 
+      
         let name = item.name
         let phone = item.phone
         let city = item.city
@@ -260,22 +247,24 @@ Alert.alert(
     
         return (
 
-          <View style={{marginTop:25}}>
+          <View style={{marginTop:30,alignSelf:"center"}}>
+
+
+
+            <View
+            style={{width:windowWidth-30, backgroundColor:"white",height:120,borderRadius:10,elevation:5,padding:5 }}>
+
 
 <TouchableOpacity 
 style={{position:"absolute",right:0,marginRight:5}}
-onPress={()=>{this.removeContact(index)}}>
-<AntDesign size={27} color="red" name="deleteuser" />
+onPress={()=>{removeContact(index)}}>
+<Entypo size={27} color="#de5050" name="cross" />
+ 
 </TouchableOpacity>
 
-            <TouchableOpacity
-            onPress={()=>{this.props.navigation.navigate("Edit Details",{index:index,rf:()=>this.rf()})}}
-            style={{width:windowWidth-50, backgroundColor:"white",height:100,borderRadius:10,marginTop:30,elevation:5,padding:5 }}>
 
-
-
-
-           <View style={{flexDirection:"row"}}>
+           <TouchableOpacity style={{flexDirection:"row",marginTop:20}}
+            onPress={()=>{props.navigation.navigate("Edit Details",{index:index,rf:()=>rf()})}} >
 
           <Ionicons size={70} color="black" name="person-circle-sharp" />
            
@@ -286,42 +275,34 @@ onPress={()=>{this.removeContact(index)}}>
           </View>
 
 
-           </View>
+           </TouchableOpacity>
            
          
            
-            </TouchableOpacity>
+        </View>  
           
         
       
 
-          </View>
+          </ View >
          
         
           
           
         )
       }
+     
+   
+     
+return(
+  <View style={{flex:1}}>
 
-    
-render(){
- const {dialogClick,flastlistR,loader}= this.state;
- const { contact } = this.props.store;
+
+ <ImageBackground style={{flex:1}} source={require("../../assets/back.png")} >   
   
 
-return(
- <Container style={{backgroundColor:"#ebebeb"}}>   
- 
-      {this.renderTopBar()}
-
-      <Content style={{backgroundColor:"#ebebeb"}}>
-      
-
-
-
        <Loader loader={loader}/>
-
-              {dialogClick && this.render_Add_Contact()} 
+        {dialogClick &&  render_Add_Contact()} 
 
               {contact.length<=0    
               ?(
@@ -331,33 +312,29 @@ return(
               <FlatList
         numColumns={1}
         data={contact}
-        extraData={flastlistR} //true/fasle
-        renderItem={this.RenderContacts}
-        ListFooterComponent={<View style={{ height:10}} />}
+        extraData={flastlistR}  
+        renderItem={RenderContacts}
         keyExtractor={(item, index) => { return index.toString() }}
-        showsVerticalScrollIndicator={false}
-        style={{marginTop:"10%",alignSelf:"center"}}
       />
               ) 
+
             }
 
 
          
-      </Content>
-
-           </Container>
-       
+</ImageBackground>  
+ {renderAddButton()} 
+</View>   
 )
      }
 
-  }
-
-  export default inject("store")(observer(Home_Screen));
+ 
+     export default  inject("store")(observer(Home_Screen));
  
   const styles = StyleSheet.create({  
   
     modalContainer: {    
-      backgroundColor : 'rgba(0,0,0,0.7)', 
+      backgroundColor : 'rgba(0,0,0,0.8)', 
       justifyContent: 'center', 
       alignItems: 'center',
       flex:1,        
@@ -365,8 +342,7 @@ return(
     modal: {    
     backgroundColor : "#e3e3e3",   
     height: 350 ,  
-    width: '70%',  
-    borderRadius:5,       
+    width: '70%',         
      },  
   
   });  

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {View,Text} from "react-native";
+import {View,Text,ImageBackground} from "react-native";
 import LottieView from 'lottie-react-native';
 
 const title= "Contact Diary"
@@ -14,12 +14,14 @@ const containerBackgroundColor=  "white"
  
   render() {
    
+    return(
 
-    return (
-      <View style={{flex:1,backgroundColor:containerBackgroundColor}}>
+    <View style={{flex:1}}>
+
+
+ <ImageBackground style={{flex:1}} source={require("../assets/back.png")} >
  
- 
-  <Text style={{fontSize:37,color:"#307ecc" ,fontWeight:"bold",marginTop:"20%",alignSelf:"center",position:"absolute"}} >
+  <Text style={{fontSize:37,color:"black" ,fontWeight:"bold",marginTop:"20%",alignSelf:"center",position:"absolute"}} >
          {title} 
     </Text>      
    
@@ -28,9 +30,10 @@ const containerBackgroundColor=  "white"
  <LottieView    source={require(Lottie)} autoPlay loop />
  
         
-
-        </View>
-    );
+ </ImageBackground>  
+ 
+</View>  
+    )
   }
 }
 

@@ -22,7 +22,7 @@ const Stack = createStackNavigator();
 
  
 
-const headerColor="#307ecc"
+const headerColor="black"
 const headerTextColor="white"
 
 

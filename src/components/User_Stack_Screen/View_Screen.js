@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View,TouchableOpacity,Text,Dimensions,StyleSheet,ToastAndroid} from "react-native";
+import { View,TouchableOpacity,Text,Dimensions,ImageBackground,ToastAndroid,ScrollView} from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Container,Content, Item, Input} from 'native-base'
 import {Loader} from "../loader"
@@ -102,27 +102,27 @@ componentWillUnmount(){
  
         return (
          
-          <View style={{marginTop:"10%"}}>
+          <View style={{marginTop:"5%"}}>
 
-          <Ionicons size={120} color="black" style={{alignSelf:"center"}} name="person-circle-sharp" />
+          <Ionicons size={130} color="black" style={{marginLeft:"10%"}} name="person-circle-sharp" />
 
-   <View  style={{margin:25,padding:5,marginTop:"10%"}}>
+   <View  style={{margin:25,padding:5,marginTop:"15%"}}>
 
- <Item style={{padding:5,borderColor:"black"}} rounded>
+ <Item style={{padding:5,borderColor:"black",backgroundColor:"white"}} rounded>
  <Ionicons   name= "person" color={"#307ecc"} size={15}  />
- <Input  
+ <Input   
  placeholder='Name'  value={name}    defaultValue={name}   
  onChangeText={(txt)=>this.setState({name:txt})} />
  </Item>
 
- <Item style={{padding:5,marginTop:25,borderColor:"black"}}  rounded>
+ <Item style={{padding:5,marginTop:25,borderColor:"black",backgroundColor:"white"}}  rounded>
  <Ionicons   name= "call" color={"#307ecc"} size={15}  />
  <Input  
- placeholder='Phone'  value={phone}    defaultValue={phone}   
+ placeholder='Phone'  value={phone}  keyboardType="number-pad"   defaultValue={phone}   
  onChangeText={(txt)=>this.setState({phone:txt})} />
  </Item>
 
- <Item style={{padding:5,marginTop:25,borderColor:"black"}}  rounded>
+ <Item style={{padding:5,marginTop:25,borderColor:"black",backgroundColor:"white"}}  rounded>
  <Ionicons   name= "home" color={"#307ecc"} size={15} />
  <Input  
  placeholder='City'  value={city}    defaultValue={city}   
@@ -135,15 +135,15 @@ componentWillUnmount(){
  
 {ButtonEnable? (
  <TouchableOpacity  
- style={{backgroundColor: "#307ecc",width:100,height:40,borderRadius:20,alignItems:"center",justifyContent:"center",alignSelf:"center",marginTop:40,elevation:5}} 
+ style={{backgroundColor: "black",width:100,height:40,borderRadius:20,alignItems:"center",justifyContent:"center",alignSelf:"center",marginTop:40,elevation:5}} 
   onPress={()=>{this.onClickSave()}}>
-<Text style={{color :"white"  ,fontSize:22}}>Save</Text>
+<Text style={{color :"white"  ,fontSize:22}}>Update</Text>
 </TouchableOpacity>
 
 ):(
   <View 
-  style={{backgroundColor: "#5589bd",width:100,height:40,borderRadius:20,alignItems:"center",justifyContent:"center",alignSelf:"center",marginTop:40,elevation:5}}>
- <Text style={{color :"silver"  ,fontSize:22}}>Save</Text>
+  style={{backgroundColor: "grey",width:100,height:40,borderRadius:20,alignItems:"center",justifyContent:"center",alignSelf:"center",marginTop:40,elevation:5}}>
+ <Text style={{color :"silver"  ,fontSize:22}}>Update</Text>
  </View>
  
 )  }
@@ -158,18 +158,20 @@ componentWillUnmount(){
     
 render(){
  const { loader,index}= this.state;
- const { contact } = this.props.store;
  
  
 return(
-      <Container style={{backgroundColor:"#f2f2f2"}}>   
+  <View style={{flex:1}}>
+ <ImageBackground style={{flex:1}} source={require("../../assets/back.png")} > 
+   <ScrollView>
    
-      <Content style={{backgroundColor:"#f2f2f2"}}>
-          
-<Loader loader={loader}/>
+         
+    <Loader loader={loader}/>
       {this.RenderContacts(index)}
-      </Content>
-           </Container>
+     
+      </ScrollView>
+      </ImageBackground>  
+</View>
 )
      }
 
