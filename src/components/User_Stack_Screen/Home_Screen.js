@@ -11,10 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const Spacing=20
-const ITEM_SIZE= 100
-
-  //create your forceUpdate hook
+ 
   function useForceUpdate(){
     const [value, setValue] = useState(0); // integer state
     return () => setValue(value => value + 1); // update the state to force render
@@ -306,7 +303,7 @@ return(
 
               {contact.length<=0    
               ?(
-              <Text style={{fontSize:38,color:"silver",marginTop:"60%",alignSelf:"center"}} >Empty</Text>
+              <Text style={{fontSize:38,color:"white",marginTop:"60%",alignSelf:"center"}} >Empty</Text>
               )
              :(
               <FlatList
