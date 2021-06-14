@@ -1,4 +1,5 @@
 import { observable,makeObservable  } from "mobx";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class contactStore {
 
@@ -13,8 +14,17 @@ class contactStore {
   addContact =(obj)=>{
     if(obj){
       this.contact.push(obj)
+      
     }
   }
+
+  setContact =(obj)=>{
+    if(obj){
+      this.contact=obj
+    }
+  }
+
+ 
 
   editContact =(index,name,phone,city)=>{
     if(index!=null){

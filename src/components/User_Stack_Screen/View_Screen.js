@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Container,Content, Item, Input} from 'native-base'
 import {Loader} from "../loader"
 import { inject, observer } from "mobx-react"; 
- 
+import AsyncStorage from '@react-native-async-storage/async-storage';
  
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -44,8 +44,18 @@ const windowHeight = Dimensions.get('window').height;
     }
 }
  
+storeData = async (value) => {
+  try {
+    const jsonValue = JSON.stringify(value)
+    await AsyncStorage.setItem('contact', jsonValue)
+  } catch (e) {
+   console.log("storedata error")
+  }
+}
+
 
   onClickSave(){
+const {contact} = this.props.store;
  this.setState({loader:true});
   
  const {name,phone,city,index}= this.state;
@@ -55,6 +65,7 @@ const windowHeight = Dimensions.get('window').height;
  
  setTimeout(() => {
   this.setState({loader:false});
+   this.storeData(contact)
   ToastAndroid.showWithGravity(
     "Save",
     ToastAndroid.SHORT,

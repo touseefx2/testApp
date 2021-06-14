@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { View,TouchableOpacity,Text,Dimensions,TextInput ,Modal,StyleSheet,FlatList,ToastAndroid,Alert} from "react-native";
+import { View,TouchableOpacity,Text,Dimensions,TextInput ,Modal,StyleSheet,FlatList,ToastAndroid,Alert,ImageBackground} from "react-native";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
-import { Container,Content} from 'native-base'
+import { Container,Content, Form, Item, Input, Label } from 'native-base'
 import {Loader} from "../loader"
 import { strLength } from "./strLength";
 import { inject, observer } from "mobx-react"; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -54,12 +55,35 @@ checkEmptyFields ()
     }
 }
  
+  storeData = async (value) => {
+  try {
+    const jsonValue = JSON.stringify(value)
+    await AsyncStorage.setItem('contact', jsonValue)
+  } catch (e) {
+   console.log("storedata error")
+  }
+}
 
+getData = async () => {
+  try {
+    const {setContact } = this.props.store;
+    const jsonValue = await AsyncStorage.getItem('contact')
+    return jsonValue != null ? setContact(JSON.parse(jsonValue)) : null;
+ 
+  } catch(e) {
+   console.log("readt data eroor ",e);
+  }
+}
+
+componentDidMount(){
+  this.getData()
+}
+ 
   onClickAdd(){
  this.setState({loader:true});
   
  const {name,phone,city,flastlistR}= this.state;
- const {addContact } = this.props.store;
+ const {addContact,contact} = this.props.store;
  
 const obj={
 name,
@@ -69,22 +93,20 @@ city,
  
  addContact(obj)
  
-
- //contactsData.push(obj);
  this.clearfields();
  this.setState({flastlistR:!flastlistR})
  setTimeout(() => {
   this.setState({loader:false})
  }, 800);
+ this.storeData(contact)
  ToastAndroid.showWithGravity(
   "Add",
   ToastAndroid.SHORT,
   ToastAndroid.BOTTOM)
-
-}
+  }
 
 removeContact(index){
-const {removeContacts}=this.props.store;
+const {removeContacts,contact}=this.props.store;
 
 Alert.alert(
   "",
@@ -95,7 +117,7 @@ Alert.alert(
       onPress: () => console.log("Cancel Pressed"),
       style: "cancel"
     },
-    { text: "Yes", onPress: () => {removeContacts(index)}
+    { text: "Yes", onPress: () => {removeContacts(index),this.storeData(contact)}
     }
   ]
 );
@@ -113,6 +135,8 @@ Alert.alert(
         let ButtonEnable=false
         if(check) 
         ButtonEnable=true 
+
+        console.log(check);
         
         return(
         <Modal
@@ -136,26 +160,30 @@ Alert.alert(
 <Text style={{fontSize:24,color:"white",fontWeight:"bold"}}>New Contact</Text>
 </View>
 
-        <View style={{padding:5,marginTop:15,alignSelf:"center",alignItems:"center"}}>
+        <View style={{padding:5,marginTop:20,alignSelf:"center",alignItems:"center"}}>
 
     
-    <TextInput  style={{ backgroundColor:"white",width:230,height:45,fontSize:16,marginTop:17,borderColor:"black",borderWidth:0.4}}  
-          onChangeText={text=> this.setState({name :text })}
-          placeholder={"Name"} 
-    />
+        <Item floatingLabel
+        style={{ width:230,height:45,fontSize:16,borderColor:"black",borderWidth:0.4}}
+        >
+              <Label>Name</Label>
+              <Input onChangeText={text=> this.setState({name :text })} />
+            </Item>
 
-<TextInput  style={{ backgroundColor:"white",width:230,height:45,fontSize:16,marginTop:17,borderColor:"black",borderWidth:0.4 }}  
-         keyboardType={"phone-pad"}
-         onChangeText={text=> this.setState({phone:text })}
-          placeholder={"Phone"} 
-    />
-    
+            <Item floatingLabel
+        style={{ width:230,height:45,fontSize:16,borderColor:"black",borderWidth:0.4,marginTop:10}}
+        >
+              <Label>Phone</Label>
+              <Input keyboardType="number-pad" onChangeText={text=> this.setState({phone:text })} />
+            </Item>
 
-    <TextInput  style={{ backgroundColor:"white",width:230,height:45,fontSize:16,marginTop:17,borderColor:"black",borderWidth:0.4 }}  
-          onChangeText={text=> this.setState({city:text })}
-          placeholder={"City"} 
-    />
-
+            <Item floatingLabel
+        style={{ width:230,height:45,fontSize:16,borderColor:"black",borderWidth:0.4,marginTop:10}}
+        >
+              <Label>City</Label>
+              <Input onChangeText={text=> this.setState({city:text })} />
+            </Item>
+            
 
   
        </View>
@@ -199,10 +227,10 @@ Alert.alert(
         return(
        
       <TouchableOpacity onPress={()=>{this.setState({dialogVisible:true,dialogClick:true})}}
-      style={{backgroundColor:"#307ecc",borderBottomEndRadius:40,borderBottomLeftRadius:40,height:65, marginTop:10,width:"90%",alignSelf:"center",alignItems:"center",justifyContent:"center"}}
+      style={{backgroundColor:"#307ecc",borderRadius:10,height:50, marginTop:10,width:"90%",alignSelf:"center",alignItems:"center",justifyContent:"center"}}
       >
 
-   <View   style={{backgroundColor:"#307ecc",borderBottomEndRadius:40,borderBottomLeftRadius:40,alignItems:"center",flexDirection:"row",height:50,justifyContent:"center",width:"90%",alignSelf:"center",borderColor:"white",borderWidth:2.5}}>  
+   <View   style={{backgroundColor:"#307ecc" ,alignItems:"center",flexDirection:"row",height:40,justifyContent:"center",width:"90%",alignSelf:"center",borderColor:"white",borderWidth:1.5}}>  
 <Text style={{color:"white",fontSize:18,fontWeight:"bold"}}>Add New Contact</Text>
 <Entypo style={{marginLeft:10}}  size={25} color="white" name="add-user" />
     </View>
@@ -232,7 +260,7 @@ Alert.alert(
     
         return (
 
-          <View style={{marginTop:20}}>
+          <View style={{marginTop:25}}>
 
 <TouchableOpacity 
 style={{position:"absolute",right:0,marginRight:5}}
@@ -242,28 +270,25 @@ onPress={()=>{this.removeContact(index)}}>
 
             <TouchableOpacity
             onPress={()=>{this.props.navigation.navigate("Edit Details",{index:index,rf:()=>this.rf()})}}
-            style={{width:150, backgroundColor:"white",height:125,marginLeft:10,borderRadius:7,marginTop:30,marginRight:10,elevation:10,padding:5 }}>
+            style={{width:windowWidth-50, backgroundColor:"white",height:100,borderRadius:10,marginTop:30,elevation:5,padding:5 }}>
 
 
 
 
-           <View style={{flexDirection:"row",alignItems:"center"}}>
+           <View style={{flexDirection:"row"}}>
 
-          <Ionicons size={45} color="black" name="person-circle-sharp" />
+          <Ionicons size={70} color="black" name="person-circle-sharp" />
            
-          <View style={{flexShrink:1}}>
-         <Text style={{color:"#307ecc",fontWeight:"bold",textTransform:"capitalize",fontSize:15}}>{name}</Text>    
+          <View style={{flexShrink:1,marginTop:10}}>
+           <Text style={{color:"#307ecc",fontWeight:"bold",textTransform:"capitalize",fontSize:15}}>{name}</Text>    
+           <Text style={{ textTransform:"capitalize",fontSize:14,marginTop:10}}>{phone}</Text>
+           <Text style={{ textTransform:"capitalize",fontSize:14,marginTop:5}}>{city}</Text>   
           </View>
 
 
            </View>
            
-           <View style={{marginTop:10}}>
-           <Text style={{ textTransform:"capitalize",fontSize:14}}>{phone}</Text>
-           <Text style={{ textTransform:"capitalize",fontSize:14,marginTop:5}}>{city}</Text>
-
-           </View>
- 
+         
            
             </TouchableOpacity>
           
@@ -282,13 +307,18 @@ onPress={()=>{this.removeContact(index)}}>
 render(){
  const {dialogClick,flastlistR,loader}= this.state;
  const { contact } = this.props.store;
- 
+  
 
 return(
-      <Container style={{backgroundColor:"#f2f2f2"}}>   
+ <Container style={{backgroundColor:"#ebebeb"}}>   
+ 
       {this.renderTopBar()}
-      <Content style={{backgroundColor:"#f2f2f2"}}>
-          
+
+      <Content style={{backgroundColor:"#ebebeb"}}>
+      
+
+
+
        <Loader loader={loader}/>
 
               {dialogClick && this.render_Add_Contact()} 
@@ -299,7 +329,7 @@ return(
               )
              :(
               <FlatList
-        numColumns={2}
+        numColumns={1}
         data={contact}
         extraData={flastlistR} //true/fasle
         renderItem={this.RenderContacts}
@@ -311,9 +341,12 @@ return(
               ) 
             }
 
-            
+
+         
       </Content>
+
            </Container>
+       
 )
      }
 
@@ -333,7 +366,7 @@ return(
     backgroundColor : "#e3e3e3",   
     height: 350 ,  
     width: '70%',  
-    borderRadius:10,       
+    borderRadius:5,       
      },  
   
   });  
