@@ -19,7 +19,7 @@ const containerBackgroundColor=  "white"
     <View style={{flex:1}}>
 
 
- <ImageBackground style={{flex:1}} source={require("../assets/back.png")} >
+ <ImageBackground style={{flex:1}} blurRadius={8}  source={require("../assets/bc.jpg")}>
  
   <Text style={{fontSize:37,color:"black" ,fontWeight:"bold",marginTop:"20%",alignSelf:"center",position:"absolute"}} >
          {title} 

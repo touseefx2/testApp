@@ -1,9 +1,10 @@
 import React, { useEffect, useState,useRef} from 'react';
-import { View,TouchableOpacity,Text,Dimensions,Modal,StyleSheet,Animated,FlatList,ToastAndroid,Alert,ImageBackground,StatusBar} from "react-native";
+import { View,TouchableOpacity,Text,Dimensions,Modal,StyleSheet,ScrollView,Animated ,ToastAndroid,Alert,ImageBackground} from "react-native";
 import Entypo from 'react-native-vector-icons/Entypo'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { Container,Content, Form, Item, Input, Label } from 'native-base'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { Item, Input, Label } from 'native-base'
 import {Loader} from "../loader"
 import { strLength } from "./strLength";
 import { inject, observer } from "mobx-react"; 
@@ -12,6 +13,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
  
+const cardWidth=windowWidth-35;
+const cardHeight=120;
+
   function useForceUpdate(){
     const [value, setValue] = useState(0); // integer state
     return () => setValue(value => value + 1); // update the state to force render
@@ -19,20 +23,18 @@ const windowHeight = Dimensions.get('window').height;
 
 
 function  Home_Screen(props)  {
-  
+  const listViewRef = useRef(); 
   const [name, setname] = useState("")
   const [phone, setphone] = useState("")
   const [city, setcity] = useState("")
-  const [flastlistR, setFlatListR] = useState(false)
   const [loader, setloader] = useState(true)
   const [dialogVisible, setdialogVisible] = useState(false)
   const [dialogClick, setdialogClick] = useState(false)
-  const scrollY =  useRef(new Animated.Value(0)).current;
   const forceUpdate = useForceUpdate();
   const { contact } = props.store;
+  const scrollY= useRef(new Animated.Value(0)).current;
 
  
-
   useEffect(()=>{
 getData();
 setTimeout(() => {
@@ -49,8 +51,7 @@ setTimeout(() => {
 
 const checkEmptyFields=()=>
 {
-  
-
+ 
     if(name=="" || phone=="" || city==""    ){
       return false;
     } else{
@@ -79,7 +80,6 @@ const getData = async () => {
 }
 
  
- 
 const onClickAdd=()=>{
  setloader(true)
  const {addContact,contact} =  props.store;
@@ -90,7 +90,6 @@ city,
  }
  addContact(obj)
  clearfields();
- setFlatListR(!flastlistR)
  setTimeout(() => {
   setloader(false)
  }, 800);
@@ -214,24 +213,59 @@ const    render_Add_Contact=()=>
       
       }
 
-    
-      const    renderAddButton=()=>{
+      const    renderUp=()=>{
         return(
-    <TouchableOpacity onPress={()=>{setdialogClick(true);setdialogVisible(true)}} 
-    style={{ position: 'absolute',flex:1,right: 20,bottom: 20,backgroundColor:"#292929",width:80,
-    height:80,borderRadius:40,alignItems:"center",justifyContent:"center"}}>
-     <MaterialIcons onPress={()=>{setdialogClick(true);setdialogVisible(true)}}   size={70} color="white" name="add" />
+          <View  style={{width:"100%",height:30}}>
+   
+<TouchableOpacity  style={{alignSelf:"flex-end",marginRight:12,marginTop:5}} onPress={()=>{
+  listViewRef.current?.scrollTo({
+    offset: 0,
+    animated: true,
+});
+  }} >
+     <FontAwesome5  style={{opacity:.7}}    size={25} color="black" name="angle-double-up" />
     </TouchableOpacity>
    
+         </View>
+        )
+      } 
+
+      const    renderDown=()=>{
+        return(
+          <View  style={{width:"100%",height:30,bottom:0}}>
+ 
+    <TouchableOpacity  style={{alignSelf:"flex-end",marginRight:12,marginBottom:5}} onPress={()=>{
+       listViewRef.current?.scrollToEnd({ animated: true })
+    }} >
+     <FontAwesome5   style={{opacity:.7}}   size={25} color="black" name="angle-double-down" />
+    </TouchableOpacity>
+   
+         </View>
         )
       }
 
-      const    rf=()=>{
-        forceUpdate()
+    
+      const    renderAddButton=()=>{
+        return(
+          <View  style={{ position: 'absolute',flex:1,right: 10,bottom: 70}}>
+
+
+          
+    <TouchableOpacity onPress={()=>{setdialogClick(true);setdialogVisible(true)}} 
+    style={{ opacity:.8,backgroundColor:"black",width:80,height:80,borderRadius:40,alignItems:"center",justifyContent:"center"}}>
+     <MaterialIcons onPress={()=>{setdialogClick(true);setdialogVisible(true)}}   size={70} color="white" name="add" />
+    </TouchableOpacity>
+   
+         </View>
+        )
       }
+
+       
  
-      const    RenderContacts  =   ({ item, index })  => { 
-      
+      const    RenderContacts  = ()=> { 
+   
+    let item  =   contact.map((item,index)=>{
+
         let name = item.name
         let phone = item.phone
         let city = item.city
@@ -240,91 +274,104 @@ const    render_Add_Contact=()=>
        phone =   strLength(phone,"phone")
        city  =   strLength(city,"city")
 
-        
+       const scale = scrollY.interpolate({
+        inputRange :[
+          -1,0,
+          cardHeight * index,
+          cardHeight * (index+2)
+        ]
+        ,  
+        outputRange:[1, 1, 1, 0]
+      })
+
+
+       return (
+ 
+        <Animated.View style={[styles.card,
+          {
     
-        return (
-
-          <View style={{marginTop:30,alignSelf:"center"}}>
-
-
-
-            <View
-            style={{width:windowWidth-30, backgroundColor:"white",height:120,borderRadius:10,elevation:5,padding:5 }}>
-
+          transform:[{scale}]
+          }
+        ]}>
 
 <TouchableOpacity 
 style={{position:"absolute",right:0,marginRight:5}}
 onPress={()=>{removeContact(index)}}>
-<Entypo size={27} color="#de5050" name="cross" />
- 
+<Entypo size={26} color="#de5050" style={{opacity:0.8}} name="cross" />
+
 </TouchableOpacity>
 
 
-           <TouchableOpacity style={{flexDirection:"row",marginTop:20}}
-            onPress={()=>{props.navigation.navigate("Edit Details",{index:index,rf:()=>rf()})}} >
+       <TouchableOpacity style={{flexDirection:"row",marginTop:10}}
+        onPress={()=>{props.navigation.navigate("Edit Details",{index:index,rf:()=> forceUpdate()})}} >
 
-          <Ionicons size={70} color="black" name="person-circle-sharp" />
-           
-          <View style={{flexShrink:1,marginTop:10}}>
-           <Text style={{color:"#307ecc",fontWeight:"bold",textTransform:"capitalize",fontSize:15}}>{name}</Text>    
-           <Text style={{ textTransform:"capitalize",fontSize:14,marginTop:10}}>{phone}</Text>
-           <Text style={{ textTransform:"capitalize",fontSize:14,marginTop:5}}>{city}</Text>   
-          </View>
+      <Ionicons size={70} color="black" name="person-circle-sharp" />
+       
+      <View style={{flexShrink:1,marginTop:10}}>
+       <Text style={{color:"#307ecc",fontWeight:"bold",textTransform:"capitalize",fontSize:15}}>{name}</Text>    
+       <Text style={{ textTransform:"capitalize",fontSize:14,marginTop:10}}>{phone}</Text>
+       <Text style={{ textTransform:"capitalize",fontSize:14,marginTop:5}}>{city}</Text>   
+      </View>
 
 
-           </TouchableOpacity>
-           
-         
-           
-        </View>  
-          
-        
+       </TouchableOpacity>
+       
+     
+       
+    </Animated.View>  
       
+ 
+    )
 
-          </ View >
-         
-        
-          
-          
-        )
+       })
+    
+  return  item;
+
       }
      
    
      
 return(
   <View style={{flex:1}}>
+ 
+ <ImageBackground style={{flex:1}} blurRadius={8}  source={require("../../assets/bc.jpg")} >   
+ {renderUp()} 
+ <Loader loader={loader}/>
+ <ScrollView ref={listViewRef}
+  onScroll={Animated.event([
+    {
+      nativeEvent: {
+        contentOffset: {
+          y: scrollY
+        }
+      }
+    }
+  ])}
+  scrollEventThrottle={1}
+ >
+        
+        
+         {dialogClick &&  render_Add_Contact()} 
 
-
- <ImageBackground style={{flex:1}} source={require("../../assets/back.png")} >   
-  
-
-       <Loader loader={loader}/>
-        {dialogClick &&  render_Add_Contact()} 
-
-              {contact.length<=0    
+              {contact.length<=0 && !loader   
               ?(
               <Text style={{fontSize:38,color:"white",marginTop:"60%",alignSelf:"center"}} >Empty</Text>
               )
              :(
-              <FlatList
-        numColumns={1}
-        data={contact}
-        extraData={flastlistR}  
-        renderItem={RenderContacts}
-        keyExtractor={(item, index) => { return index.toString() }}
-      />
+             RenderContacts()
               ) 
 
             }
 
+</ScrollView>  
+{renderDown()}    
+</ImageBackground> 
 
-         
-</ImageBackground>  
  {renderAddButton()} 
+ 
 </View>   
 )
      }
-
  
      export default  inject("store")(observer(Home_Screen));
  
@@ -341,5 +388,15 @@ return(
     height: 350 ,  
     width: '70%',         
      },  
+     card:
+     {
+      marginTop:30,alignSelf:"center", width:cardWidth, backgroundColor:"white",
+      height:cardHeight,borderRadius:10,padding:10,borderRadius:10,
+      shadowColor:"black",
+      shadowOffset:{width:0,height:10},
+      shadowOpacity:.3,
+      shadowRadius:20,
+      elevation:5,
+    }
   
   });  

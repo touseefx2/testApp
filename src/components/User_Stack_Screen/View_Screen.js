@@ -86,7 +86,7 @@ city:contact[index].city
 
 
 componentWillUnmount(){
-  this.props.route.params.rf()
+  this.props.route.params.rf();
 }
    
  
@@ -103,30 +103,31 @@ componentWillUnmount(){
         return (
          
           <View style={{marginTop:"5%"}}>
+           
+           
+           <Ionicons size={120} color="black" style={{marginLeft:"8%"}}   name="person-circle-sharp" />
+        
+         
 
-          <Ionicons size={130} color="black" style={{marginLeft:"10%"}} name="person-circle-sharp" />
-
-   <View  style={{margin:25,padding:5,marginTop:"15%"}}>
+   <View  style={{margin:25,marginTop:"15%"}}>
 
  <Item style={{padding:5,borderColor:"black",backgroundColor:"white"}} rounded>
- <Ionicons   name= "person" color={"#307ecc"} size={15}  />
+ <Ionicons   name= "person" color={"#307ecc"} size={20}  />
  <Input   
- placeholder='Name'  value={name}    defaultValue={name}   
- onChangeText={(txt)=>this.setState({name:txt})} />
+placeholder='Name'  value={name}    defaultValue={name}   onChangeText={(txt)=>this.setState({name:txt})} />
  </Item>
 
  <Item style={{padding:5,marginTop:25,borderColor:"black",backgroundColor:"white"}}  rounded>
- <Ionicons   name= "call" color={"#307ecc"} size={15}  />
+ <Ionicons   name= "call" color={"#307ecc"} size={20}  />
  <Input  
  placeholder='Phone'  value={phone}  keyboardType="number-pad"   defaultValue={phone}   
  onChangeText={(txt)=>this.setState({phone:txt})} />
  </Item>
 
  <Item style={{padding:5,marginTop:25,borderColor:"black",backgroundColor:"white"}}  rounded>
- <Ionicons   name= "home" color={"#307ecc"} size={15} />
+ <Ionicons   name= "home" color={"#307ecc"} size={20} />
  <Input  
- placeholder='City'  value={city}    defaultValue={city}   
- onChangeText={(txt)=>this.setState({city:txt})} />
+ placeholder='City'  value={city}    defaultValue={city}   onChangeText={(txt)=>this.setState({city:txt})} />
  </Item>
           
  </View>
@@ -162,7 +163,8 @@ render(){
  
 return(
   <View style={{flex:1}}>
- <ImageBackground style={{flex:1}} source={require("../../assets/back.png")} > 
+
+<ImageBackground style={{flex:1}} blurRadius={8}  source={require("../../assets/bc.jpg")}>
    <ScrollView>
    
          

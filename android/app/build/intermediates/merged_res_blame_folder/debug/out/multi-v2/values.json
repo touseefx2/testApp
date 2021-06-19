@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/x2/Desktop/testApp/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
+            "outputFile": "/Users/x2/Desktop/React Native/testApp/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
             "map": [
                 {
                     "source": "/Users/x2/.gradle/caches/transforms-2/files-2.1/5e5754defa7ec1b661ffd11a17838c67/fragment-1.2.1/res/values/values.xml",
@@ -54,6 +54,42 @@
                         "startOffsets": "37236,37276,37716,37898,37953,38837,38891,38943,38992,39053",
                         "endColumns": "39,46,42,54,46,53,51,48,60,49",
                         "endOffsets": "37271,37318,37754,37948,37995,38886,38938,38987,39048,39098"
+                    }
+                },
+                {
+                    "source": "/Users/x2/Desktop/React Native/testApp/android/app/src/main/res/values/styles.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "54",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "234"
+                    },
+                    "to": {
+                        "startLines": "802",
+                        "startColumns": "4",
+                        "startOffsets": "58522",
+                        "endLines": "805",
+                        "endColumns": "12",
+                        "endOffsets": "58702"
+                    }
+                },
+                {
+                    "source": "/Users/x2/Desktop/React Native/testApp/android/app/src/main/res/values/strings.xml",
+                    "from": {
+                        "startLines": "1",
+                        "startColumns": "4",
+                        "startOffsets": "16",
+                        "endColumns": "44",
+                        "endOffsets": "56"
+                    },
+                    "to": {
+                        "startLines": "672",
+                        "startColumns": "4",
+                        "startOffsets": "43054",
+                        "endColumns": "44",
+                        "endOffsets": "43094"
                     }
                 },
                 {
@@ -152,6 +188,23 @@
                     }
                 },
                 {
+                    "source": "/Users/x2/Desktop/React Native/testApp/android/app/build/generated/res/resValues/debug/values/gradleResValues.xml",
+                    "from": {
+                        "startLines": "6,8",
+                        "startColumns": "4,4",
+                        "startOffsets": "156,262",
+                        "endColumns": "63,68",
+                        "endOffsets": "215,326"
+                    },
+                    "to": {
+                        "startLines": "636,637",
+                        "startColumns": "4,4",
+                        "startOffsets": "40535,40599",
+                        "endColumns": "63,68",
+                        "endOffsets": "40594,40663"
+                    }
+                },
+                {
                     "source": "/Users/x2/.gradle/caches/transforms-2/files-2.1/baebfc24ee3e9d675a4614c1f27f118a/jetified-appcompat-resources-1.1.0/res/values/values.xml",
                     "from": {
                         "startLines": "2,29,36,47,74",
@@ -228,23 +281,6 @@
                     }
                 },
                 {
-                    "source": "/Users/x2/Desktop/testApp/android/app/src/main/res/values/strings.xml",
-                    "from": {
-                        "startLines": "1",
-                        "startColumns": "4",
-                        "startOffsets": "16",
-                        "endColumns": "44",
-                        "endOffsets": "56"
-                    },
-                    "to": {
-                        "startLines": "672",
-                        "startColumns": "4",
-                        "startOffsets": "43054",
-                        "endColumns": "44",
-                        "endOffsets": "43094"
-                    }
-                },
-                {
                     "source": "/Users/x2/.gradle/caches/transforms-2/files-2.1/8850ed829d25245e8497182323bc73d2/jetified-drawee-2.2.0/res/values/values.xml",
                     "from": {
                         "startLines": "2,141",
@@ -261,42 +297,6 @@
                         "endLines": "6005,6736",
                         "endColumns": "22,22",
                         "endOffsets": "382648,419206"
-                    }
-                },
-                {
-                    "source": "/Users/x2/Desktop/testApp/android/app/src/main/res/values/styles.xml",
-                    "from": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "54",
-                        "endLines": "6",
-                        "endColumns": "12",
-                        "endOffsets": "234"
-                    },
-                    "to": {
-                        "startLines": "802",
-                        "startColumns": "4",
-                        "startOffsets": "58522",
-                        "endLines": "805",
-                        "endColumns": "12",
-                        "endOffsets": "58702"
-                    }
-                },
-                {
-                    "source": "/Users/x2/Desktop/testApp/android/app/build/generated/res/resValues/debug/values/gradleResValues.xml",
-                    "from": {
-                        "startLines": "6,8",
-                        "startColumns": "4,4",
-                        "startOffsets": "156,262",
-                        "endColumns": "63,68",
-                        "endOffsets": "215,326"
-                    },
-                    "to": {
-                        "startLines": "636,637",
-                        "startColumns": "4,4",
-                        "startOffsets": "40535,40599",
-                        "endColumns": "63,68",
-                        "endOffsets": "40594,40663"
                     }
                 },
                 {
