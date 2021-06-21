@@ -261,7 +261,6 @@ const    render_Add_Contact=()=>
       }
 
        
- 
       const    RenderContacts  = ()=> { 
    
     let item  =   contact.map((item,index)=>{
@@ -284,12 +283,22 @@ const    render_Add_Contact=()=>
         outputRange:[1, 1, 1, 0]
       })
 
+      const opacity = scrollY.interpolate({
+        inputRange :[
+          -1,0,
+          cardHeight * index,
+          cardHeight * (index+0.9)
+        ]
+        ,  
+        outputRange:[1, 1, 1, 0]
+      })
+
 
        return (
  
         <Animated.View style={[styles.card,
           {
-    
+          opacity,
           transform:[{scale}]
           }
         ]}>
@@ -328,8 +337,7 @@ onPress={()=>{removeContact(index)}}>
   return  item;
 
       }
-     
-   
+       
      
 return(
   <View style={{flex:1}}>
